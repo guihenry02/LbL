@@ -1,4 +1,4 @@
-package dev.guigas.languagelearning.language_learning.domain;
+package dev.guigas.languagelearning.language_learning.enums;
 
 public enum Language {
     ENGLISH,
@@ -10,4 +10,5 @@ public enum Language {
     RUSSIAN,
     CHINESE,
     JAPANESE
-}
+};
+
