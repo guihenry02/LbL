@@ -1,18 +1,16 @@
 package dev.guigas.languagelearning.language_learning.service;
 
+import org.springframework.stereotype.Service;
+
 import dev.guigas.languagelearning.language_learning.domain.LearningInteraction;
 import dev.guigas.languagelearning.language_learning.domain.TextAnalysis;
 import dev.guigas.languagelearning.language_learning.enums.AnalysisProvider;
 import dev.guigas.languagelearning.language_learning.enums.InteractionType;
-import dev.guigas.languagelearning.language_learning.repository.TextAnalisysRepository;
 
+
+@Service
 public class TextAnalysisService {
 
-    private final TextAnalisysRepository textAnalisysRepository;
-
-    public TextAnalysisService(TextAnalisysRepository textAnalisysRepository) {
-        this.textAnalisysRepository = textAnalisysRepository;
-    }
 
     public TextAnalysis analyze(LearningInteraction learningInteraction)
     {
@@ -20,15 +18,18 @@ public class TextAnalysisService {
         String translatedText = translate(learningInteraction);
         String explanation = explain();
         AnalysisProvider analysisProvider = getAnalysisProvider(); // Placeholder for the actual provider
-        TextAnalysis textAnalysis = new TextAnalysis(interactionType, translatedText, explanation, analysisProvider);
-        textAnalisysRepository.save(textAnalysis);
+        TextAnalysis textAnalysis = new TextAnalysis(interactionType, translatedText, explanation, analysisProvider, learningInteraction);
         return textAnalysis;
         // reestruturar pra fazer o service de LearningInteraction salvar a analise e não esse service aqui
     }
 
     private InteractionType classify(LearningInteraction learningInteraction) {
         // Implement classification logic here
-        return InteractionType.WORD; // Placeholder
+        if (learningInteraction.getSelectedText() != null && learningInteraction.getSelectedText().matches(".*\\s.*")) {
+            return InteractionType.SENTENCE;
+        } else {
+            return InteractionType.WORD;
+        }
     }
 
     private String translate(LearningInteraction learningInteraction) {

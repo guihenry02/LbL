@@ -2,13 +2,13 @@ package dev.guigas.languagelearning.language_learning.domain;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import dev.guigas.languagelearning.language_learning.enums.Language;
-
 public class LearningInteraction{
+
+    private final String nativeLanguage;
 
     private final String selectedText;
 
-    private final Language language;
+    private final String targetLanguage;
 
     private final LocalDateTime createdAt;
 
@@ -16,14 +16,23 @@ public class LearningInteraction{
 
 
 
-    public LearningInteraction(String selectedText, Language language) {
+
+    public LearningInteraction(String selectedText, String nativeLanguage, String targetLanguage) {
 
         if (selectedText == null || selectedText.trim().isEmpty()) {
             throw new IllegalArgumentException("Selected text cannot be null or empty");
         }
-        
+        if (nativeLanguage == null || nativeLanguage.trim().isEmpty()) {
+            throw new IllegalArgumentException("Native language cannot be null or empty");
+        }
+        if (targetLanguage == null || targetLanguage.trim().isEmpty()) {
+            throw new IllegalArgumentException("Target language cannot be null or empty");
+        }
+
+
+        this.nativeLanguage = nativeLanguage;
         this.selectedText = selectedText;
-        this.language = language;
+        this.targetLanguage = targetLanguage;
         this.createdAt = LocalDateTime.now();
         this.id = UUID.randomUUID();
     }
@@ -32,8 +41,12 @@ public class LearningInteraction{
         return selectedText;
     }
 
-    public Language getLanguage() {
-        return language;
+    public String getNativeLanguage() {
+        return nativeLanguage;
+    }
+
+    public String getTargetLanguage() {
+        return targetLanguage;
     }
 
     public UUID getId() {

@@ -1,4 +1,4 @@
-package dev.guigas.languagelearning.language_learning.repository;
+package dev.guigas.languagelearning.language_learning.infra;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.stereotype.Repository;
 
 import dev.guigas.languagelearning.language_learning.domain.TextAnalysis;
+import dev.guigas.languagelearning.language_learning.repository.TextAnalisysRepository;
 
 @Repository
 public class inMemoryTextAnalsys implements TextAnalisysRepository {

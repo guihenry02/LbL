@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.guigas.languagelearning.language_learning.dto.LearningInteractionRequest;
 import dev.guigas.languagelearning.language_learning.dto.LearningInteractionResponse;
+import dev.guigas.languagelearning.language_learning.dto.TranslationResponse;
 import dev.guigas.languagelearning.language_learning.service.LearningInteractionService;
+import dev.guigas.languagelearning.language_learning.service.TextAnalysisService;
 
 @RequestMapping("/learning-interactions")
 @RestController
@@ -18,7 +20,7 @@ public class LearningInteractionController {
     
     private final LearningInteractionService learningInteractionService;
     
-    public LearningInteractionController(LearningInteractionService learningInteractionService) {
+    public LearningInteractionController(LearningInteractionService learningInteractionService, TextAnalysisService textAnalysisService) {
         this.learningInteractionService = learningInteractionService;
     }
 
@@ -28,7 +30,7 @@ public class LearningInteractionController {
     }
 
     @PostMapping
-    public LearningInteractionResponse createLearningInteraction(@RequestBody LearningInteractionRequest request) {
+    public TranslationResponse createLearningInteraction(@RequestBody LearningInteractionRequest request) {
         return learningInteractionService.createLearningInteraction(request);
     }
 

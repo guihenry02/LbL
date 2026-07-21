@@ -1,14 +1,165 @@
 package dev.guigas.languagelearning.language_learning.enums;
 
+import java.util.Optional;
+
 public enum Language {
-    ENGLISH,
-    SPANISH,
-    FRENCH,
-    GERMAN,
-    ITALIAN,
-    PORTUGUESE,
-    RUSSIAN,
-    CHINESE,
-    JAPANESE
-};
+    AUTO("auto"),
+    AFRIKAANS("af"),
+    ALBANIAN("sq"),
+    AMHARIC("am"),
+    ARABIC("ar"),
+    ARMENIAN("hy"),
+    ASSAMESE("as"),
+    AYMARA("ay"),
+    AZERBAIJANI("az"),
+    BAMBARA("bm"),
+    BASQUE("eu"),
+    BELARUSIAN("be"),
+    BENGALI("bn"),
+    BHOJPURI("bho"),
+    BOSNIAN("bs"),
+    BULGARIAN("bg"),
+    CATALAN("ca"),
+    CEBUANO("ceb"),
+    CHICHEWA("ny"),
+    CHINESE("zh"),
+    CHINESE_TRADITIONAL("zh_HANT"),
+    CORSICAN("co"),
+    CROATIAN("hr"),
+    CZECH("cs"),
+    DANISH("da"),
+    DHIVEHI("dv"),
+    DOGRI("doi"),
+    DUTCH("nl"),
+    ENGLISH("en"),
+    ESPERANTO("eo"),
+    ESTONIAN("et"),
+    EWE("ee"),
+    FILIPINO("tl"),
+    FINNISH("fi"),
+    FRENCH("fr"),
+    FRISIAN("fy"),
+    GALICIAN("gl"),
+    GEORGIAN("ka"),
+    GERMAN("de"),
+    GREEK("el"),
+    GUARANI("gn"),
+    GUJARATI("gu"),
+    HAITIAN_CREOLE("ht"),
+    HAUSA("ha"),
+    HAWAIIAN("haw"),
+    HEBREW("iw"),
+    HINDI("hi"),
+    HMONG("hmn"),
+    HUNGARIAN("hu"),
+    ICELANDIC("is"),
+    IGBO("ig"),
+    ILOCANO("ilo"),
+    INDONESIAN("id"),
+    IRISH("ga"),
+    ITALIAN("it"),
+    JAPANESE("ja"),
+    JAVANESE("jw"),
+    KANNADA("kn"),
+    KAZAKH("kk"),
+    KHMER("km"),
+    KINYARWANDA("rw"),
+    KONKANI("gom"),
+    KOREAN("ko"),
+    KRIO("kri"),
+    KURDISH("ku"),
+    SORANI_KURDISH("ckb"),
+    KYRGYZ("ky"),
+    LAO("lo"),
+    LATIN("la"),
+    LATVIAN("lv"),
+    LINGALA("ln"),
+    LITHUANIAN("lt"),
+    LUGANDA("lg"),
+    LUXEMBOURGISH("lb"),
+    MACEDONIAN("mk"),
+    MAITHILI("mai"),
+    MALAGASY("mg"),
+    MALAY("ms"),
+    MALAYALAM("ml"),
+    MALTESE("mt"),
+    MAORI("mi"),
+    MARATHI("mr"),
+    MNI_MTEI("mni-Mtei"),
+    MIZO("lus"),
+    MONGOLIAN("mn"),
+    BURMESE("my"),
+    NEPALI("ne"),
+    NORWEGIAN("no"),
+    ODIA("or"),
+    OROMO("om"),
+    PASHTO("ps"),
+    PERSIAN("fa"),
+    POLISH("pl"),
+    PORTUGUESE("pt"),
+    PUNJABI("pa"),
+    QUECHUA("qu"),
+    ROMANIAN("ro"),
+    RUSSIAN("ru"),
+    SAMOAN("sm"),
+    SANSKRIT("sa"),
+    SCOTTISH_GAELIC("gd"),
+    NORTHERN_SOTHO("nso"),
+    SERBIAN("sr"),
+    SOUTHERN_SOTHO("st"),
+    SHONA("sn"),
+    SINDHI("sd"),
+    SINHALA("si"),
+    SLOVAK("sk"),
+    SLOVENIAN("sl"),
+    SOMALI("so"),
+    SPANISH("es"),
+    SUNDANESE("su"),
+    SWAHILI("sw"),
+    SWEDISH("sv"),
+    TAJIK("tg"),
+    TAMIL("ta"),
+    TATAR("tt"),
+    TELUGU("te"),
+    THAI("th"),
+    TIGRINYA("ti"),
+    TSONGA("ts"),
+    TURKISH("tr"),
+    TURKMEN("tk"),
+    TWI("ak"),
+    UKRAINIAN("uk"),
+    URDU("ur"),
+    UYGHUR("ug"),
+    UZBEK("uz"),
+    VIETNAMESE("vi"),
+    WELSH("cy"),
+    XHOSA("xh"),
+    YIDDIS("yi"),
+    YORUBA("yo"),
+    ZULU("zu");
+
+    private final String code;
+
+    Language(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public static Optional<Language> fromCode(String code) {
+        if (code == null || code.isBlank()) {
+            return Optional.empty();
+        }
+
+        for (Language language : values()) {
+            if (language.code.equalsIgnoreCase(code)) {
+                return Optional.of(language);
+            }
+        }
+
+        return Optional.empty();
+    }
+}
 

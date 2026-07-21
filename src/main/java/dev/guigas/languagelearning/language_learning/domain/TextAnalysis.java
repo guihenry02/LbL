@@ -19,13 +19,16 @@ public class TextAnalysis {
 
     private final UUID id;
 
-    public TextAnalysis(InteractionType interactionType, String translatedText, String explanation, AnalysisProvider analysisProvider) {
+    private final LearningInteraction learningInteraction;
+
+    public TextAnalysis(InteractionType interactionType, String translatedText, String explanation, AnalysisProvider analysisProvider, LearningInteraction learningInteraction) {
         this.interactionType = interactionType;
         this.createdAt = LocalDateTime.now();
         this.translatedText = translatedText;
         this.explanation = explanation;
         this.analysisProvider = analysisProvider;
         this.id = UUID.randomUUID();
+        this.learningInteraction = learningInteraction;
     }
 
     public InteractionType getInteractionType() {
@@ -50,5 +53,9 @@ public class TextAnalysis {
 
     public UUID getId() {
         return id;
+    }
+
+    public LearningInteraction getLearningInteraction() {
+        return learningInteraction;
     }
 }
