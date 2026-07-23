@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import dev.guigas.languagelearning.language_learning.domain.ReadingSession;
-import dev.guigas.languagelearning.language_learning.dto.ReadingSessionResponse;
 import dev.guigas.languagelearning.language_learning.repository.ReadingSessionRepository;
 
 @Service
@@ -17,21 +16,19 @@ public class ReadingSessionService {
         this.readingSessionRepository = readingSessionRepository;
     }
     
-    public ReadingSessionResponse createReadingSession() {
-        ReadingSession Session = new ReadingSession();
-        readingSessionRepository.save(Session);
-        return new ReadingSessionResponse(Session.getId(), Session.getCreatedAt());
+    public ReadingSession createReadingSession() {
+        ReadingSession session = new ReadingSession();
+        readingSessionRepository.save(session);
+        return session;
 
     }
 
-    public ReadingSessionResponse finishReadingSession(UUID id) {
+    public ReadingSession finishReadingSession(UUID id) {
         readingSessionRepository.updateFinishedAt(id);
-        ReadingSession session = readingSessionRepository.findById(id);
-        return session != null ? new ReadingSessionResponse(session.getId(), session.getCreatedAt(), session.getFinishedAt()) : null;
+        return readingSessionRepository.findById(id);
     }
 
-    public ReadingSessionResponse getReadingSessionById(UUID id) {
-        ReadingSession session = readingSessionRepository.findById(id);
-        return session != null ? new ReadingSessionResponse(session.getId(), session.getCreatedAt(), session.getFinishedAt()) : null;
+    public ReadingSession getReadingSessionById(UUID id) {
+        return readingSessionRepository.findById(id);
     }
 }

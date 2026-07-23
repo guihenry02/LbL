@@ -12,7 +12,7 @@ public class LearningInteraction{
 
     private final LocalDateTime createdAt;
 
-    private final ReadingSession readingSession;
+    private final UUID readingSessionId;
 
     private final UUID id;
 
@@ -20,7 +20,8 @@ public class LearningInteraction{
 
 
 
-    public LearningInteraction(String selectedText, String nativeLanguage, String targetLanguage, ReadingSession readingSession) {
+
+    public LearningInteraction(String selectedText, String nativeLanguage, String targetLanguage, UUID readingSessionId) {
 
         if (selectedText == null || selectedText.trim().isEmpty()) {
             throw new IllegalArgumentException("Selected text cannot be null or empty");
@@ -37,7 +38,7 @@ public class LearningInteraction{
         this.selectedText = selectedText;
         this.targetLanguage = targetLanguage;
         this.createdAt = LocalDateTime.now();
-        this.readingSession = readingSession;
+        this.readingSessionId = readingSessionId;
         this.id = UUID.randomUUID();
     }
 

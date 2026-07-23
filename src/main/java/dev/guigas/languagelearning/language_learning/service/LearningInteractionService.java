@@ -17,10 +17,12 @@ public class LearningInteractionService {
 
     private final LearningInteractionRepository learningInteractionRepository;
     private final TranslationService translationService;
+    private final ReadingSessionService readingSessionService;
 
-    public LearningInteractionService(LearningInteractionRepository learningInteractionRepository, TranslationService translationService) {
+    public LearningInteractionService(LearningInteractionRepository learningInteractionRepository, TranslationService translationService, ReadingSessionService readingSessionService) {
         this.learningInteractionRepository = learningInteractionRepository;
         this.translationService = translationService;
+        this.readingSessionService = readingSessionService;
     }
    
 
@@ -33,10 +35,24 @@ public class LearningInteractionService {
     }
 
     public TranslationResponse createLearningInteraction(LearningInteractionRequest request) {
+
+        if (request.readingSessionId() != null) {
+                var readingSession = readingSessionService.getReadingSessionById(request.readingSessionId());
+                if (readingSession == null) {
+                    return TranslationResponse.error("Reading session not found for ID: " + request.readingSessionId());
+                }
+                
+                if (readingSession.isFinished()) {
+                    return TranslationResponse.error("Reading session is already finished for ID: " + request.readingSessionId());
+                }
+
+        } 
+
         LearningInteraction learningInteraction = new LearningInteraction(
                 request.selectedText(),
                 request.nativeLanguage().getCode(),
-                request.targetLanguage().getCode());
+                request.targetLanguage().getCode(),
+                request.readingSessionId());
 
         LearningInteraction savedLearningInteraction = learningInteractionRepository.save(learningInteraction);
         Translation translation = translationService.translate(
@@ -44,13 +60,14 @@ public class LearningInteractionService {
                 request.nativeLanguage(),
                 request.targetLanguage());
     
-        return new TranslationResponse(
+        return TranslationResponse.success(
                 translation.getTranslatedText(),
                 translation.getOriginalText(),
                 translation.getNativeLanguage(),
                 translation.getTargetLanguage(),
                 translation.getCreatedAt(),
-                translation.getId()
+                translation.getId(),
+                request.readingSessionId()
         );
     }
 }
