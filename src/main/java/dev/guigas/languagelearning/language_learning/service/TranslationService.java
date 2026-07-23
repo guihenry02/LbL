@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 
 import dev.guigas.languagelearning.language_learning.domain.Translation;
 import dev.guigas.languagelearning.language_learning.enums.Language;
-import dev.guigas.languagelearning.language_learning.provider.LigvaTranslationProvider;
 import dev.guigas.languagelearning.language_learning.provider.TranslationProviderResult;
+import dev.guigas.languagelearning.language_learning.provider.ligva.LigvaTranslationProvider;
 
 @Service
 public class TranslationService {

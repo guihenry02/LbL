@@ -1,10 +1,12 @@
-package dev.guigas.languagelearning.language_learning.provider;
+package dev.guigas.languagelearning.language_learning.provider.ligva;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import dev.guigas.languagelearning.language_learning.enums.Language;
+import dev.guigas.languagelearning.language_learning.provider.TranslationProvider;
+import dev.guigas.languagelearning.language_learning.provider.TranslationProviderResult;
 
 @Component
 public class LigvaTranslationProvider implements TranslationProvider {
@@ -19,7 +21,7 @@ public class LigvaTranslationProvider implements TranslationProvider {
 
     @Override
     public TranslationProviderResult translate(String text, Language source, Language target) {
-        String translatedText = ligvaRestClient.get()
+        LigvaTranslationResponse translatedText = ligvaRestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{source}/{target}/{text}")
                     .build(
@@ -27,8 +29,8 @@ public class LigvaTranslationProvider implements TranslationProvider {
                         target.getCode(),
                         text))
                 .retrieve()
-                .body(String.class);
+                .body(LigvaTranslationResponse.class);
 
-        return new TranslationProviderResult(text, translatedText, source, target);
+        return new TranslationProviderResult(text, translatedText.translation(), source, target);
     }
 }

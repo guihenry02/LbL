@@ -1,8 +1,6 @@
 package dev.guigas.languagelearning.language_learning.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -47,8 +45,8 @@ public class LearningInteractionService {
                 request.targetLanguage());
     
         return new TranslationResponse(
-                translation.getOriginalText(),
                 translation.getTranslatedText(),
+                translation.getOriginalText(),
                 translation.getNativeLanguage(),
                 translation.getTargetLanguage(),
                 translation.getCreatedAt(),
