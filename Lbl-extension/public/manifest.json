@@ -2,5 +2,23 @@
   "manifest_version": 3,
   "name": "Language Learning",
   "description": "Browser extension for language learning.",
-  "version": "0.0.1"
+  "version": "0.0.1",
+
+  "background": {
+    "service_worker": "src/background/main.ts",
+    "type": "module",
+    "scripts": ["src/background/main.js"]
+
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["src/content/main.ts"]
+    }
+  ],
+
+  "action": {
+    "default_title": "Language Learning"
+  }
 }
