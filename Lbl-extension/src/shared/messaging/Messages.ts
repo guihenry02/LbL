@@ -1,6 +1,10 @@
 import { MessageType } from "./MessageType";
+import { Language } from "../../domain/language";
 
-export interface PingMessage {
-    type: "PING";
-}
+export type TranslateTextMessage = {
+  type: typeof MessageType.TRANSLATE_TEXT;
+  selectedText: string;
+  sourceLanguage: Language;
+  targetLanguage: Language;
 
+};

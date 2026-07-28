@@ -1,5 +1,5 @@
 export const MessageType = {
-  PING: "PING",
+  TRANSLATE_TEXT: "TRANSLATE_TEXT",
 } as const;
 
 // Create a type alias matching the values ("PING")
