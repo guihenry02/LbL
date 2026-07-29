@@ -28,10 +28,38 @@
     margin-bottom: 10px;
 }
 
+.popup__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .popup__title {
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.02em;
+}
+
+.popup__translate {
+    appearance: none;
+    border: none;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
+.popup__translate:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.popup__translate:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
 }
 
 .popup__close {
@@ -56,6 +84,23 @@
     font-size: 12px;
     color: #475569;
     margin-bottom: 8px;
+}
+
+.popup__selection-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    margin: 0 0 4px;
+}
+
+.popup__selection {
+    font-size: 14px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #334155;
 }
 
 .popup__spinner {

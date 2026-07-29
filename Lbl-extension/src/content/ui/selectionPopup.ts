@@ -8,7 +8,10 @@ export class SelectionPopup {
     private readonly container: HTMLDivElement;
     private readonly title: HTMLDivElement;
     private readonly body: HTMLDivElement;
+    private readonly translateButton: HTMLButtonElement;
     private readonly closeButton: HTMLButtonElement;
+    private selectedText = "";
+    private onTranslateRequested: ((selectedText: string) => void | Promise<void>) | undefined;
 
 
     constructor() {
@@ -28,14 +31,23 @@ export class SelectionPopup {
 
         this.body = this.container.querySelector('.popup__body') as HTMLDivElement;
         this.title = this.container.querySelector('.popup__title') as HTMLDivElement;
+        this.translateButton = this.container.querySelector('.popup__translate') as HTMLButtonElement;
         this.closeButton = this.container.querySelector('.popup__close') as HTMLButtonElement;
+
+        this.translateButton.addEventListener('click', () => {
+            if (!this.selectedText) {
+                return;
+            }
+
+            void this.onTranslateRequested?.(this.selectedText);
+        });
 
         this.closeButton.addEventListener('click', () => this.hide());
 
         const mountTarget = document.body ?? document.documentElement;
         mountTarget.appendChild(this.host);
 
-        this.renderLoading();
+        this.renderShellState();
 
     }
 
@@ -47,6 +59,15 @@ export class SelectionPopup {
 
     showSelectionPopup(x: number, y: number): void {
         this.showSelection(x, y);
+    }
+
+    setSelectedText(selectedText: string): void {
+        this.selectedText = selectedText;
+        this.renderSelection();
+    }
+
+    setOnTranslateRequested(handler: (selectedText: string) => void | Promise<void>): void {
+        this.onTranslateRequested = handler;
     }
 
     hide(): void {
@@ -76,14 +97,38 @@ export class SelectionPopup {
         return `
             <div class="popup__header">
                 <div class="popup__title">Tradução</div>
-                <button class="popup__close" type="button" aria-label="Fechar popup">&times;</button>
+                <div class="popup__header-actions">
+                    <button class="popup__translate" type="button">Traduzir</button>
+                    <button class="popup__close" type="button" aria-label="Fechar popup">&times;</button>
+                </div>
             </div>
             <div class="popup__body"></div>
         `;
     }
 
+    private renderShellState(): void {
+        this.title.textContent = 'Tradução';
+        this.translateButton.disabled = !this.selectedText;
+        this.body.innerHTML = `
+            <div class="popup__status">
+                <span>Selecione um texto e clique em Traduzir.</span>
+            </div>
+        `;
+    }
+
+    private renderSelection(): void {
+        this.title.textContent = 'Tradução';
+        this.translateButton.disabled = !this.selectedText;
+
+        this.body.innerHTML = `
+            <div class="popup__selection-label">Texto selecionado</div>
+            <div class="popup__selection">${this.escapeHtml(this.selectedText || 'Nenhum texto selecionado')}</div>
+        `;
+    }
+
     private renderLoading(): void {
         this.title.textContent = 'Tradução';
+        this.translateButton.disabled = true;
         this.body.innerHTML = `
             <div class="popup__status">
                 <span class="popup__spinner" aria-hidden="true"></span>
@@ -98,6 +143,7 @@ export class SelectionPopup {
         const targetLanguage = message.targetLanguage ?? 'tradução';
 
         this.title.textContent = `Tradução para ${String(targetLanguage).toLowerCase()}`;
+        this.translateButton.disabled = false;
         this.body.innerHTML = `
             ${originalText ? `
                 <div class="popup__original-label">Texto original</div>
@@ -110,6 +156,7 @@ export class SelectionPopup {
 
     private renderError(message: string): void {
         this.title.textContent = 'Erro na tradução';
+        this.translateButton.disabled = false;
         this.body.innerHTML = `
             <div class="popup__error-label">Não foi possível traduzir</div>
             <div class="popup__error">${this.escapeHtml(message)}</div>

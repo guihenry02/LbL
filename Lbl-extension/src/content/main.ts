@@ -9,6 +9,9 @@ let popup: SelectionPopup | undefined;
 function getPopup(): SelectionPopup {
     if (!popup) {
         popup = new SelectionPopup();
+        popup.setOnTranslateRequested((selectedText) => {
+            void sendSelectedTextToBackground(selectedText, popup as SelectionPopup);
+        });
     }
 
     return popup;
@@ -54,11 +57,11 @@ async function onMouseUp() {
     const popup = getPopup();
     const rect = selection?.rangeCount ? selection.getRangeAt(0).getBoundingClientRect() : undefined;
 
+    popup.setSelectedText(selectedText);
+
     if (rect) {
         popup.showSelectionPopup(rect.left, rect.bottom);
     }
-
-    await sendSelectedTextToBackground(selectedText, popup);
 }
 
 function main() {
