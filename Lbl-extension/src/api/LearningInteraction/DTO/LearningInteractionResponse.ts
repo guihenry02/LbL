@@ -1,4 +1,4 @@
-import type { Language } from "../../domain/language";
+import type { Language } from "../../../domain/language";
 
 export interface LearningInteractionResponse {
     translatedText?: string;

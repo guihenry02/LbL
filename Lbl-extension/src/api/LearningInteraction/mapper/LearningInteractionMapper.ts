@@ -1,4 +1,4 @@
-import type { TranslateTextMessage } from "../../shared/messaging/Messages";
+import type { TranslateTextMessage } from "../../../shared/messaging/Messages";
 import type { LearningInteractionRequest } from "../DTO/LearningInteractionRequest";
 
 export function toLearningInteractionRequest(message: TranslateTextMessage): LearningInteractionRequest {
@@ -8,4 +8,3 @@ export function toLearningInteractionRequest(message: TranslateTextMessage): Lea
         targetLanguage: message.targetLanguage,
     };
 }
-

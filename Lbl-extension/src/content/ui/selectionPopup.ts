@@ -1,4 +1,4 @@
-import type { LearningInteractionResponse } from "../../api/DTO/LearningInteractionResponse";
+import type { LearningInteractionResponse } from "../../api/LearningInteraction/DTO/LearningInteractionResponse";
 import popupStyles from "./selection-popup.css?raw";
 
 export class SelectionPopup {

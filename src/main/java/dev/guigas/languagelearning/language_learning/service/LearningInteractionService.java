@@ -12,6 +12,13 @@ import dev.guigas.languagelearning.language_learning.dto.TranslationResponse;
 import dev.guigas.languagelearning.language_learning.enums.Language;
 import dev.guigas.languagelearning.language_learning.repository.LearningInteractionRepository;
 
+
+/*Ao criar LearningInteraction:
+
+1. Verificar se a sessão existe.
+2. Verificar se pertence ao usuário autenticado.
+3. Verificar se está OPEN.
+4. Associar. */
 @Service
 public class LearningInteractionService {
 

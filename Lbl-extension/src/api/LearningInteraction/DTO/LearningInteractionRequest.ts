@@ -1,4 +1,4 @@
-import type { Language } from "../../domain/language";
+import type { Language } from "../../../domain/language";
 
 // api/dto/LearningInteractionRequest.ts
 export interface LearningInteractionRequest {

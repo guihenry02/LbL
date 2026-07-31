@@ -1,23 +1,34 @@
-import { learningInteractionClient } from "../api/client/LearningInteractionClient";
-import type { LearningInteractionResponse } from "../api/DTO/LearningInteractionResponse";
-import { toLearningInteractionRequest } from "../api/mapper/ LearningInteractionMapper";
-import type { TranslateTextMessage } from "../shared/messaging/Messages";
+import { learningInteractionClient } from "../api/LearningInteraction/client/LearningInteractionClient";
+import type { LearningInteractionResponse } from "../api/LearningInteraction/DTO/LearningInteractionResponse";
+import { toLearningInteractionRequest } from "../api/LearningInteraction/mapper/LearningInteractionMapper";
+import { readingSessionClient } from "../api/ReadingSession/client/ReadingSessionClient";
+import type { ReadingSessionResponse } from "../api/ReadingSession/DTO/ReadingSessionResponse";
+import type { TranslateTextMessage, Message, FinishReadingSessionMessage } from "../shared/messaging/Messages";
 import { MessageType } from "../shared/messaging/MessageType";
 
-async function handleMessage(message: TranslateTextMessage): Promise<LearningInteractionResponse> {
+async function handleMessage(message: Message): Promise<LearningInteractionResponse | ReadingSessionResponse> {
 
     switch (message.type) {
         case MessageType.TRANSLATE_TEXT:
-            return handleTranslateText(message);
+            return handleTranslateText(message as TranslateTextMessage);
+        
+        case MessageType.CREATE_READING_SESSION:
+            return handleRequestReadingSession();
 
+        case MessageType.FINISH_READING_SESSION:
+            return handleFinishReadingSession((message as FinishReadingSessionMessage).sessionId);
         default:
-            throw new Error(`Unknown message type: ${message.type}`);
+            throw new Error(`Unknown message type`);
     }
    
 }
 
 
+async function handleFinishReadingSession(sessionId: string): Promise<ReadingSessionResponse> {
 
+    const response = await readingSessionClient.finishReadingSession(sessionId);
+    return response;
+}
 
 async function handleTranslateText(message: TranslateTextMessage): Promise<LearningInteractionResponse> {
     
@@ -29,6 +40,15 @@ async function handleTranslateText(message: TranslateTextMessage): Promise<Learn
 
 }
 
+async function handleRequestReadingSession(): Promise<ReadingSessionResponse> {
+    
+    const response = await readingSessionClient.createReadingSession();
+
+    return response;
+
+}
+
 browser.runtime.onMessage.addListener((message) => {
-    return handleMessage(message as TranslateTextMessage);
+    return handleMessage(message as Message);
 });
+
