@@ -9,4 +9,4 @@ export interface LearningInteractionResponse {
     id?: string;
     errorMessage?: string;
     readingSessionId?: string;
-}
+}1

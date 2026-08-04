@@ -31,6 +31,7 @@ public class LearningInteractionController {
 
     @PostMapping
     public TranslationResponse createLearningInteraction(@RequestBody LearningInteractionRequest request) {
+        System.out.println("Received request: " + request);
         return learningInteractionService.createLearningInteraction(request);
     }
 

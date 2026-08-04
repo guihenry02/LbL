@@ -6,5 +6,6 @@ export function toLearningInteractionRequest(message: TranslateTextMessage): Lea
         selectedText: message.selectedText,
         nativeLanguage: message.sourceLanguage,
         targetLanguage: message.targetLanguage,
+        readingSessionId: message.sessionId,
     };
 }

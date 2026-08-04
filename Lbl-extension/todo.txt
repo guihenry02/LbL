@@ -1,0 +1,5 @@
+
+// Remover o sessionId do ReadingSessionStorage apenas quando o
+// background indicar que a sessão realmente não existe (ex.: 404).
+// Não remover em erros de comunicação (timeout, 500, offline, etc.).
+

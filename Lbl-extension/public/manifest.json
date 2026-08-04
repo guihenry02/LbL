@@ -4,6 +4,10 @@
   "description": "Browser extension for language learning.",
   "version": "0.0.1",
 
+  "permissions": ["storage"],
+
+  "host_permissions": ["http://localhost:8081/*"],
+
   "background": {
     "service_worker": "src/background/main.ts",
     "type": "module",
@@ -19,6 +23,7 @@
   ],
 
   "action": {
-    "default_title": "Language Learning"
+    "default_title": "Language Learning",
+    "default_popup": "index.html"
   }
 }

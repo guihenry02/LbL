@@ -6,6 +6,7 @@ export type TranslateTextMessage = {
   selectedText: string;
   sourceLanguage: Language;
   targetLanguage: Language;
+  sessionId?: string;
 };
 
 export type CreateReadingSessionMessage = {
@@ -17,4 +18,9 @@ export type FinishReadingSessionMessage = {
   sessionId: string;
 };
 
-export type Message = TranslateTextMessage | CreateReadingSessionMessage | FinishReadingSessionMessage;
+export type GetReadingSessionMessage = {
+  type: typeof MessageType.GET_READING_SESSION;
+  sessionId: string;
+};
+
+export type Message = TranslateTextMessage | CreateReadingSessionMessage | FinishReadingSessionMessage | GetReadingSessionMessage;

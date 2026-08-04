@@ -1,4 +1,4 @@
-export class ReadingSessionStorage {
+class ReadingSessionStorage {
 
     private static readonly READING_SESSION_KEY = "readingSessionId";
 

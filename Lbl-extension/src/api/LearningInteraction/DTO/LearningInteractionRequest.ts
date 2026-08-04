@@ -5,4 +5,5 @@ export interface LearningInteractionRequest {
     selectedText: string;
     nativeLanguage: Language;
     targetLanguage: Language;
+    readingSessionId?: string;
 }
