@@ -5,20 +5,23 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import dev.guigas.languagelearning.language_learning.domain.LearningInteraction;
-import dev.guigas.languagelearning.language_learning.domain.Translation;
+import dev.guigas.languagelearning.language_learning.domain.ReadingSession;
 import dev.guigas.languagelearning.language_learning.dto.LearningInteractionRequest;
 import dev.guigas.languagelearning.language_learning.dto.LearningInteractionResponse;
-import dev.guigas.languagelearning.language_learning.dto.TranslationResponse;
+import dev.guigas.languagelearning.language_learning.dto.TranslationResult;
 import dev.guigas.languagelearning.language_learning.enums.Language;
+import dev.guigas.languagelearning.language_learning.exceptions.BusinessRuleException;
+import dev.guigas.languagelearning.language_learning.exceptions.ResourceNotFoundException;
 import dev.guigas.languagelearning.language_learning.repository.LearningInteractionRepository;
 
+/*
+Ao criar uma LearningInteraction:
 
-/*Ao criar LearningInteraction:
-
-1. Verificar se a sessão existe.
+1. Verificar se a ReadingSession existe.
 2. Verificar se pertence ao usuário autenticado.
 3. Verificar se está OPEN.
-4. Associar. */
+4. Associar a interação à sessão.
+*/
 @Service
 public class LearningInteractionService {
 
@@ -26,12 +29,15 @@ public class LearningInteractionService {
     private final TranslationService translationService;
     private final ReadingSessionService readingSessionService;
 
-    public LearningInteractionService(LearningInteractionRepository learningInteractionRepository, TranslationService translationService, ReadingSessionService readingSessionService) {
+    public LearningInteractionService(
+            LearningInteractionRepository learningInteractionRepository,
+            TranslationService translationService,
+            ReadingSessionService readingSessionService) {
+
         this.learningInteractionRepository = learningInteractionRepository;
         this.translationService = translationService;
         this.readingSessionService = readingSessionService;
     }
-   
 
     public List<LearningInteractionResponse> getLearningInteractions() {
         return learningInteractionRepository.findAll().stream()
@@ -41,41 +47,42 @@ public class LearningInteractionService {
                 .toList();
     }
 
-    public TranslationResponse createLearningInteraction(LearningInteractionRequest request) {
+    public TranslationResult createLearningInteraction(LearningInteractionRequest request) {
 
-        if (request.readingSessionId() != null) {
-                var readingSession = readingSessionService.getReadingSessionById(request.readingSessionId());
-                if (readingSession == null) {
-                    return TranslationResponse.error("Reading session not found for ID: " + request.readingSessionId());
-                }
-                
-                if (readingSession.isFinished()) {
-                    return TranslationResponse.error("Reading session is already finished for ID: " + request.readingSessionId());
-                }
-
-        } 
+        ReadingSession readingSession = validateReadingSession(request);
 
         LearningInteraction learningInteraction = new LearningInteraction(
                 request.selectedText(),
                 request.nativeLanguage().getCode(),
                 request.targetLanguage().getCode(),
-                request.readingSessionId());
+                readingSession);
 
-        LearningInteraction savedLearningInteraction = learningInteractionRepository.save(learningInteraction);
-        Translation translation = translationService.translate(
-                savedLearningInteraction.getSelectedText(),
-                request.nativeLanguage(),
-                request.targetLanguage());
-    
-        return TranslationResponse.success(
-                translation.getTranslatedText(),
-                translation.getOriginalText(),
-                translation.getNativeLanguage(),
-                translation.getTargetLanguage(),
-                translation.getCreatedAt(),
-                translation.getId(),
-                request.readingSessionId()
-        );
+        LearningInteraction savedLearningInteraction =
+                learningInteractionRepository.save(learningInteraction);
+
+        return translationService.translate(savedLearningInteraction);
+    }
+
+    private ReadingSession validateReadingSession(LearningInteractionRequest request) {
+
+        if (request.readingSessionId() == null) {
+            return null;
+        }
+
+        ReadingSession readingSession =
+                readingSessionService.getReadingSessionById(request.readingSessionId());
+
+        if (readingSession == null) {
+            throw new ResourceNotFoundException(
+                    "Reading session not found with ID: " + request.readingSessionId());
+        }
+
+        if (readingSession.isFinished()) {
+            throw new BusinessRuleException(
+                    "Reading session is already finished with ID: " + request.readingSessionId());
+        }
+
+
+        return readingSession;
     }
 }
-

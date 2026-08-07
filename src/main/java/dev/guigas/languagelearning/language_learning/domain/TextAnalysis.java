@@ -7,6 +7,8 @@ import dev.guigas.languagelearning.language_learning.enums.AnalysisProvider;
 import dev.guigas.languagelearning.language_learning.enums.InteractionType;
 
 public class TextAnalysis {
+
+    
     private final InteractionType interactionType;
     
     private final LocalDateTime createdAt;

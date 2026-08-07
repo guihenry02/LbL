@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.guigas.languagelearning.language_learning.dto.LearningInteractionRequest;
 import dev.guigas.languagelearning.language_learning.dto.LearningInteractionResponse;
-import dev.guigas.languagelearning.language_learning.dto.TranslationResponse;
+import dev.guigas.languagelearning.language_learning.dto.TranslationResult;
 import dev.guigas.languagelearning.language_learning.service.LearningInteractionService;
 import dev.guigas.languagelearning.language_learning.service.TextAnalysisService;
 
@@ -30,7 +30,7 @@ public class LearningInteractionController {
     }
 
     @PostMapping
-    public TranslationResponse createLearningInteraction(@RequestBody LearningInteractionRequest request) {
+    public TranslationResult createLearningInteraction(@RequestBody LearningInteractionRequest request) {
         System.out.println("Received request: " + request);
         return learningInteractionService.createLearningInteraction(request);
     }

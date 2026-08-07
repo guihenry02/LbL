@@ -4,47 +4,48 @@ import org.springframework.stereotype.Service;
 
 import dev.guigas.languagelearning.language_learning.domain.LearningInteraction;
 import dev.guigas.languagelearning.language_learning.domain.TextAnalysis;
+import dev.guigas.languagelearning.language_learning.dto.TranslationResult;
 import dev.guigas.languagelearning.language_learning.enums.AnalysisProvider;
 import dev.guigas.languagelearning.language_learning.enums.InteractionType;
-
+import dev.guigas.languagelearning.language_learning.enums.Language;
 
 @Service
 public class TextAnalysisService {
 
+    private final TranslationService translationService;
+    private final InteractionClassifier interactionClassifier;
+    private final ExplanationService explanationService;
 
-    public TextAnalysis analyze(LearningInteraction learningInteraction)
-    {
-        InteractionType interactionType = classify(learningInteraction);
-        String translatedText = translate(learningInteraction);
-        String explanation = explain();
-        AnalysisProvider analysisProvider = getAnalysisProvider(); // Placeholder for the actual provider
-        TextAnalysis textAnalysis = new TextAnalysis(interactionType, translatedText, explanation, analysisProvider, learningInteraction);
-        return textAnalysis;
-        // reestruturar pra fazer o service de LearningInteraction salvar a analise e não esse service aqui
+    public TextAnalysisService(
+            TranslationService translationService,
+            InteractionClassifier interactionClassifier,
+            ExplanationService explanationService) {
+        this.translationService = translationService;
+        this.interactionClassifier = interactionClassifier;
+        this.explanationService = explanationService;
     }
 
-    private InteractionType classify(LearningInteraction learningInteraction) {
-        // Implement classification logic here
-        if (learningInteraction.getSelectedText() != null && learningInteraction.getSelectedText().matches(".*\\s.*")) {
-            return InteractionType.SENTENCE;
-        } else {
-            return InteractionType.WORD;
+    public TextAnalysis analyze(LearningInteraction learningInteraction) {
+        InteractionType interactionType = interactionClassifier.classify(learningInteraction);
+
+        Language sourceLanguage = Language.fromCode(learningInteraction.getNativeLanguage()).orElse(Language.AUTO);
+        Language targetLanguage = Language.fromCode(learningInteraction.getTargetLanguage()).orElse(Language.ENGLISH);
+
+        TranslationResult translationResult = translationService.translate(
+                learningInteraction);
+
+        String explanation = null;
+        if (learningInteraction.getSelectedText() != null && !learningInteraction.getSelectedText().isBlank()) {
+            explanation = explanationService.explain(
+                    translationResult.originalText(),
+                    translationResult.translatedText());
         }
-    }
 
-    private String translate(LearningInteraction learningInteraction) {
-        // Implement translation logic here
-        return "Translated text"; // Placeholder
+        return new TextAnalysis(
+                interactionType,
+                translationResult.translatedText(),
+                explanation,
+                AnalysisProvider.TRANSLATION_API,
+                learningInteraction);
     }
-
-    private String explain() {
-        // Implement explanation logic here
-        return "Explanation of the text"; // Placeholder
-    }
-
-    private AnalysisProvider getAnalysisProvider() {
-        // Implement logic to determine the analysis provider
-        return AnalysisProvider.AI; // Placeholder
-    }
-
 }

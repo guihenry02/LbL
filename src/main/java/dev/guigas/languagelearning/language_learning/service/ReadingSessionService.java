@@ -31,11 +31,15 @@ public class ReadingSessionService {
     }
 
     public ReadingSession finishReadingSession(UUID id) {
-        readingSessionRepository.updateFinishedAt(id);
-        return readingSessionRepository.findById(id);
+        ReadingSession session = readingSessionRepository.findById(id).orElse(null);
+        if (session != null && session.getIsOpen()) {
+            session.finish();
+            readingSessionRepository.save(session);
+        }
+        return readingSessionRepository.findById(id).orElse(null);
     }
 
     public ReadingSession getReadingSessionById(UUID id) {
-        return readingSessionRepository.findById(id);
+        return readingSessionRepository.findById(id).orElse(null);
     }
 }

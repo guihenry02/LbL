@@ -1,49 +1,63 @@
 package dev.guigas.languagelearning.language_learning.domain;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class LearningInteraction{
+import org.hibernate.annotations.CreationTimestamp;
 
-    private final String nativeLanguage;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
-    private final String selectedText;
+@Entity
+@Table(name = "TB_LEARNING_INTERACTIONS")
+public class LearningInteraction {
 
-    private final String targetLanguage;
+    @Id 
+    @GeneratedValue(strategy = GenerationType.UUID) 
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
 
-    private final LocalDateTime createdAt;
+    @Column(name = "native_language", nullable = false)
+    private String nativeLanguage;
 
-    private final UUID readingSessionId;
+    @Column(name = "selected_text", nullable = false)
+    private String selectedText;
 
-    private final UUID id;
+    @Column(name = "target_language", nullable = false)
+    private String targetLanguage;
+
+    @CreationTimestamp 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    // Relacionamento com o Objeto, e não apenas o ID
+    @ManyToOne
+    @JoinColumn(name = "reading_session_id", referencedColumnName = "id")
+    private ReadingSession readingSession;
+
+    /**
+     * Construtor vazio exigido pelo JPA/Hibernate.
+     * Usamos protected para evitar que seja instanciado sem dados em outros lugares do código.
+     */
+    protected LearningInteraction() {}
 
 
-
-
-
-
-    public LearningInteraction(String selectedText, String nativeLanguage, String targetLanguage, UUID readingSessionId) {
-
-        if (selectedText == null || selectedText.trim().isEmpty()) {
-            throw new IllegalArgumentException("Selected text cannot be null or empty");
-        }
-        if (nativeLanguage == null || nativeLanguage.trim().isEmpty()) {
-            throw new IllegalArgumentException("Native language cannot be null or empty");
-        }
-        if (targetLanguage == null || targetLanguage.trim().isEmpty()) {
-            throw new IllegalArgumentException("Target language cannot be null or empty");
-        }
-
-
-        this.nativeLanguage = nativeLanguage;
+    public LearningInteraction(String selectedText, String nativeLanguage, String targetLanguage, ReadingSession readingSession) {
         this.selectedText = selectedText;
+        this.nativeLanguage = nativeLanguage;
         this.targetLanguage = targetLanguage;
-        this.createdAt = LocalDateTime.now();
-        this.readingSessionId = readingSessionId;
-        this.id = UUID.randomUUID();
+        this.readingSession = readingSession;
     }
 
-    public LearningInteraction(String selectedText, String nativeLanguage, String targetLanguage) {
-        this(selectedText, nativeLanguage, targetLanguage, null);
+
+    public UUID getId() {
+        return id;
     }
 
     public String getSelectedText() {
@@ -58,7 +72,11 @@ public class LearningInteraction{
         return targetLanguage;
     }
 
-    public UUID getId() {
-        return id;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public ReadingSession getReadingSession() {
+        return readingSession;
     }
 }

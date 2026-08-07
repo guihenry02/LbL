@@ -2,7 +2,8 @@ package dev.guigas.languagelearning.language_learning.service;
 
 import org.springframework.stereotype.Service;
 
-import dev.guigas.languagelearning.language_learning.domain.Translation;
+import dev.guigas.languagelearning.language_learning.domain.LearningInteraction;
+import dev.guigas.languagelearning.language_learning.dto.TranslationResult;
 import dev.guigas.languagelearning.language_learning.enums.Language;
 import dev.guigas.languagelearning.language_learning.provider.TranslationProviderResult;
 import dev.guigas.languagelearning.language_learning.provider.ligva.LigvaTranslationProvider;
@@ -16,16 +17,16 @@ public class TranslationService {
         this.ligvaTranslationProvider = ligvaTranslationProvider;
     }
 
-    public Translation translate(String text, Language sourceLanguageCode, Language targetLanguageCode) {
-        TranslationProviderResult providerResult = ligvaTranslationProvider.translate(text, sourceLanguageCode, targetLanguageCode);
-        return new Translation(
+    public TranslationResult translate(LearningInteraction learningInteraction) {
+        TranslationProviderResult providerResult = ligvaTranslationProvider.translate(learningInteraction.getSelectedText(),
+                Language.fromCode(learningInteraction.getNativeLanguage()).orElse(Language.AUTO),
+                Language.fromCode(learningInteraction.getTargetLanguage()).orElse(Language.ENGLISH));
+        return new TranslationResult(
             providerResult.originalText(),
             providerResult.translatedText(),
             providerResult.sourceLanguage(),
             providerResult.targetLanguage()
         );
     }
-        
-
 }
 
