@@ -12,7 +12,6 @@ import dev.guigas.languagelearning.language_learning.dto.LearningInteractionRequ
 import dev.guigas.languagelearning.language_learning.dto.LearningInteractionResponse;
 import dev.guigas.languagelearning.language_learning.dto.TranslationResult;
 import dev.guigas.languagelearning.language_learning.service.LearningInteractionService;
-import dev.guigas.languagelearning.language_learning.service.TextAnalysisService;
 
 @RequestMapping("/learning-interactions")
 @RestController
@@ -20,7 +19,7 @@ public class LearningInteractionController {
     
     private final LearningInteractionService learningInteractionService;
     
-    public LearningInteractionController(LearningInteractionService learningInteractionService, TextAnalysisService textAnalysisService) {
+    public LearningInteractionController(LearningInteractionService learningInteractionService) {
         this.learningInteractionService = learningInteractionService;
     }
 

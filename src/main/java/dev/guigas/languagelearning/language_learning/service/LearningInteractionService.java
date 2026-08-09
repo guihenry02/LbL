@@ -2,6 +2,7 @@ package dev.guigas.languagelearning.language_learning.service;
 
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import dev.guigas.languagelearning.language_learning.domain.LearningInteraction;
@@ -10,6 +11,7 @@ import dev.guigas.languagelearning.language_learning.dto.LearningInteractionRequ
 import dev.guigas.languagelearning.language_learning.dto.LearningInteractionResponse;
 import dev.guigas.languagelearning.language_learning.dto.TranslationResult;
 import dev.guigas.languagelearning.language_learning.enums.Language;
+import dev.guigas.languagelearning.language_learning.event.LearningInteractionCreatedEvent;
 import dev.guigas.languagelearning.language_learning.exceptions.BusinessRuleException;
 import dev.guigas.languagelearning.language_learning.exceptions.ResourceNotFoundException;
 import dev.guigas.languagelearning.language_learning.repository.LearningInteractionRepository;
@@ -28,6 +30,7 @@ public class LearningInteractionService {
     private final LearningInteractionRepository learningInteractionRepository;
     private final TranslationService translationService;
     private final ReadingSessionService readingSessionService;
+    ApplicationEventPublisher eventPublisher;
 
     public LearningInteractionService(
             LearningInteractionRepository learningInteractionRepository,
@@ -57,10 +60,10 @@ public class LearningInteractionService {
                 request.targetLanguage().getCode(),
                 readingSession);
 
-        LearningInteraction savedLearningInteraction =
-                learningInteractionRepository.save(learningInteraction);
-
+        LearningInteraction savedLearningInteraction = learningInteractionRepository.save(learningInteraction);
+        eventPublisher.publishEvent(new LearningInteractionCreatedEvent(savedLearningInteraction.getId()));
         return translationService.translate(savedLearningInteraction);
+
     }
 
     private ReadingSession validateReadingSession(LearningInteractionRequest request) {
