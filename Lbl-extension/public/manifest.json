@@ -6,19 +6,20 @@
 
   "permissions": ["storage"],
 
-  "host_permissions": ["http://localhost:8081/*"],
+  "host_permissions": [
+    "http://localhost:8081/*",
+    "file:///*"
+  ],
 
   "background": {
-    "service_worker": "src/background/main.ts",
-    "type": "module",
     "scripts": ["src/background/main.js"]
-
   },
 
   "content_scripts": [
     {
-      "matches": ["https://*/*", "http://*/*"],
-      "js": ["src/content/main.ts"]
+      "matches": ["https://*/*", "http://*/*", "file:///*"],
+      "js": ["src/content/main.js"],
+      "all_frames": true
     }
   ],
 

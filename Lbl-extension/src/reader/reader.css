@@ -1,0 +1,201 @@
+html,
+body {
+    margin: 0;
+    height: 100%;
+}
+
+.reader {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    color: #e2e8f0;
+    background:
+        radial-gradient(circle at top left, rgba(89, 131, 252, 0.16), transparent 42%),
+        linear-gradient(180deg, #0f172a 0%, #111827 100%);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+/* ---------- Toolbar ---------- */
+
+.reader-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    padding: 10px 16px;
+    background: rgba(15, 23, 42, 0.85);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
+    z-index: 10;
+}
+
+.reader-toolbar__group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.reader-toolbar__label {
+    min-width: 56px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+.reader-button {
+    appearance: none;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    background: rgba(148, 163, 184, 0.08);
+    cursor: pointer;
+    transition: background 160ms ease, transform 160ms ease, opacity 160ms ease;
+}
+
+.reader-button:hover:not(:disabled) {
+    background: rgba(148, 163, 184, 0.18);
+}
+
+.reader-button:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.reader-button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.reader-button:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+}
+
+.reader-button--primary {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border: none;
+    color: #ecfdf5;
+    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.25);
+}
+
+.reader-button--primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2fd26a 0%, #1aab50 100%);
+}
+
+/* ---------- Container / páginas ---------- */
+
+.reader-container {
+    position: relative;
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    scroll-behavior: smooth;
+
+    /* Escala atual do documento; ReaderContainer.setScale() a mantém em sincronia. */
+    --scale-factor: 1;
+}
+
+.pdf-page {
+    position: relative;
+    flex: 0 0 auto;
+    background: #ffffff;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+
+    /*
+     * Variáveis exigidas pelo TextLayer do PDF.js v6 (setLayerDimensions e o
+     * dimensionamento dos spans dependem delas). --scale-factor é herdado do
+     * .reader-container.
+     */
+    --user-unit: 1;
+    --total-scale-factor: calc(var(--scale-factor) * var(--user-unit));
+    --scale-round-x: 1px;
+    --scale-round-y: 1px;
+}
+
+.pdf-page__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ---------- Text Layer (PDF.js) ---------- */
+
+.textLayer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    line-height: 1;
+    text-align: initial;
+    text-size-adjust: none;
+    forced-color-adjust: none;
+    transform-origin: 0 0;
+    caret-color: CanvasText;
+    z-index: 0;
+
+    /* Variáveis usadas no dimensionamento dos spans; --min-font-size é definida
+       inline pelo TextLayer do PDF.js em cada renderização. */
+    --min-font-size: 1;
+    --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+    --min-font-size-inv: calc(1 / var(--min-font-size));
+}
+
+.textLayer :is(span, br) {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+}
+
+/*
+ * Dimensionamento dos spans conforme o CSS oficial do PDF.js v6.
+ *
+ * O TextLayer define --font-height/--scale-x/--rotate inline em cada span (em
+ * unidades de "user space" do PDF). Sem estas regras os spans herdam o
+ * font-size do documento (16px) e ficam maiores que os glifos do canvas e
+ * sobrepostos entre linhas: a seleção era capturada em regiões acima/abaixo do
+ * ponto do mouse e algumas palavras ficavam inalcançáveis.
+ */
+.textLayer > :not(.markedContent),
+.textLayer .markedContent span:not(.markedContent) {
+    z-index: 1;
+
+    --font-height: 0;
+    font-size: calc(var(--text-scale-factor) * var(--font-height));
+
+    --scale-x: 1;
+    --rotate: 0deg;
+    transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+
+.textLayer ::selection {
+    background: rgba(59, 130, 246, 0.35);
+}
+
+/* ---------- Status ---------- */
+
+.reader-status {
+    margin-top: 15vh;
+    padding: 18px 24px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.72);
+    color: rgba(226, 232, 240, 0.88);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    max-width: 420px;
+}

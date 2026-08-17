@@ -11,6 +11,10 @@ Currently, two official plugins are available:
 
 The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
+## Local Files
+
+The extension also runs on local `file://` pages. In Chromium-based browsers, you may need to enable the extension's access to file URLs in the extension details page.
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:

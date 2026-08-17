@@ -30,16 +30,18 @@ public class LearningInteractionService {
     private final LearningInteractionRepository learningInteractionRepository;
     private final TranslationService translationService;
     private final ReadingSessionService readingSessionService;
-    ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
 
     public LearningInteractionService(
             LearningInteractionRepository learningInteractionRepository,
             TranslationService translationService,
-            ReadingSessionService readingSessionService) {
+            ReadingSessionService readingSessionService,
+            ApplicationEventPublisher eventPublisher) {
 
         this.learningInteractionRepository = learningInteractionRepository;
         this.translationService = translationService;
         this.readingSessionService = readingSessionService;
+        this.eventPublisher = eventPublisher;
     }
 
     public List<LearningInteractionResponse> getLearningInteractions() {

@@ -46,7 +46,7 @@ python -m spacy download en_core_web_sm
 
 ```bash
 source .venv/bin/activate
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn app.main:app --host 0.0.0.0 --port 8090 --reload
 ```
 
 O modelo spaCy é carregado **uma única vez**, na inicialização do processo.
@@ -63,15 +63,15 @@ python -m pytest
 
 ```bash
 docker build -t nlp-service .
-docker run --rm -p 8000:8000 nlp-service
+docker run --rm -p 8090:8090 nlp-service
 ```
 
-Healthcheck em `/health`; documentação interativa em `http://localhost:8000/docs`.
+Healthcheck em `/health`; documentação interativa em `http://localhost:8090/docs`.
 
 ## Exemplo de request
 
 ```bash
-curl -X POST http://localhost:8000/analyze \
+curl -X POST http://localhost:8090/analyze \
   -H "Content-Type: application/json" \
   -d '{"text": "I gave up smoking."}'
 ```

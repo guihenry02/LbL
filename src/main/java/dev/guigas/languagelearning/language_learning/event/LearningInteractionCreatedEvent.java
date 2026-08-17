@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.context.ApplicationEvent;
 
+
 public class LearningInteractionCreatedEvent extends ApplicationEvent {
     private final UUID learningInteractionId;
     
